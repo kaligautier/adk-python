@@ -183,12 +183,19 @@ CALLBACK_PARAMS = [
     ([({}, CallbackType.SYNC)], {}, [1]),
     # Test single async callback returning response (should skip tool execution)
     ([({}, CallbackType.ASYNC)], {}, [1]),
-    # Test callback chain where an empty dict from the first callback doesn't
-    # stop the chain, allowing the second callback to execute.
+    # Test callback chain where an empty dict from the first callback still
+    # short-circuits the remaining callbacks.
     (
         [({}, CallbackType.SYNC), ({"second": "callback"}, CallbackType.ASYNC)],
-        {"second": "callback"},
-        [1, 1],
+        {},
+        [1, 0],
+    ),
+    # Test callback chain where an empty dict from the first async callback
+    # still short-circuits the remaining callbacks.
+    (
+        [({}, CallbackType.ASYNC), ({"second": "callback"}, CallbackType.SYNC)],
+        {},
+        [1, 0],
     ),
     # Test callback chain where first returns None, second returns response
     (

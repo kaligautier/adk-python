@@ -126,7 +126,7 @@ def mock_async_before_cb_side_effect(
     tool_context: ToolContext,
     ret_value: Optional[Dict[str, Any]] = None,
 ):
-  if ret_value:
+  if ret_value is not None:
     return ret_value
   return None
 
@@ -137,7 +137,7 @@ def mock_sync_before_cb_side_effect(
     tool_context: ToolContext,
     ret_value: Optional[Dict[str, Any]] = None,
 ):
-  if ret_value:
+  if ret_value is not None:
     return ret_value
   return None
 
@@ -149,7 +149,7 @@ async def mock_async_after_cb_side_effect(
     tool_response: Dict[str, Any],
     ret_value: Optional[Dict[str, Any]] = None,
 ):
-  if ret_value:
+  if ret_value is not None:
     return ret_value
   return None
 
@@ -161,12 +161,30 @@ def mock_sync_after_cb_side_effect(
     tool_response: Dict[str, Any],
     ret_value: Optional[Dict[str, Any]] = None,
 ):
-  if ret_value:
+  if ret_value is not None:
     return ret_value
   return None
 
 
 CALLBACK_PARAMS = [
+    pytest.param(
+        [
+            ({}, CallbackType.SYNC),
+            ({"test": "callback_2_response"}, CallbackType.ASYNC),
+        ],
+        {},
+        [1, 0],
+        id="first_sync_callback_returns_empty_dict",
+    ),
+    pytest.param(
+        [
+            ({}, CallbackType.ASYNC),
+            ({"test": "callback_2_response"}, CallbackType.SYNC),
+        ],
+        {},
+        [1, 0],
+        id="first_async_callback_returns_empty_dict",
+    ),
     pytest.param(
         [
             (None, CallbackType.SYNC),

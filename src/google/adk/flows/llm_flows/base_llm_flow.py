@@ -219,7 +219,7 @@ async def _handle_before_model_callback(
           llm_request=llm_request,
       )
   )
-  if callback_response:
+  if callback_response is not None:
     return callback_response
 
   # If no overrides are provided from the plugins, further run the canonical
@@ -232,7 +232,7 @@ async def _handle_before_model_callback(
     )
     if inspect.isawaitable(callback_response):
       callback_response = await callback_response
-    if callback_response:
+    if callback_response is not None:
       return callback_response
 
 
@@ -274,7 +274,7 @@ async def _handle_after_model_callback(
     if not ground_metadata:
       return response
 
-    if not response:
+    if response is None:
       response = llm_response
     response.grounding_metadata = ground_metadata
     return response
@@ -290,7 +290,7 @@ async def _handle_after_model_callback(
           llm_response=llm_response,
       )
   )
-  if callback_response:
+  if callback_response is not None:
     return await _maybe_add_grounding_metadata(callback_response)
 
   # If no overrides are provided from the plugins, further run the canonical
@@ -303,7 +303,7 @@ async def _handle_after_model_callback(
     )
     if inspect.isawaitable(callback_response):
       callback_response = await callback_response
-    if callback_response:
+    if callback_response is not None:
       return await _maybe_add_grounding_metadata(callback_response)
   return await _maybe_add_grounding_metadata()
 

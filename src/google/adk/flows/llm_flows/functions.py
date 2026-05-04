@@ -524,7 +524,7 @@ async def _execute_single_function_call_async(
         )
         if inspect.isawaitable(function_response):
           function_response = await function_response
-        if function_response:
+        if function_response is not None:
           break
 
     # Step 3: Otherwise, proceed calling the tool normally.
@@ -568,7 +568,7 @@ async def _execute_single_function_call_async(
         )
         if inspect.isawaitable(altered_function_response):
           altered_function_response = await altered_function_response
-        if altered_function_response:
+        if altered_function_response is not None:
           break
 
     # Step 6: If alternative response exists from after_tool_callback, use it
@@ -579,7 +579,7 @@ async def _execute_single_function_call_async(
     if tool.is_long_running:
       # Allow long-running function to return None to not provide function
       # response.
-      if not function_response:
+      if function_response is None:
         return None
 
     # Note: State deltas are not applied here - they are collected in
@@ -755,7 +755,7 @@ async def _execute_single_function_call_live(
         )
         if inspect.isawaitable(function_response):
           function_response = await function_response
-        if function_response:
+        if function_response is not None:
           break
 
     # Step 3: Otherwise, proceed calling the tool normally.
@@ -804,7 +804,7 @@ async def _execute_single_function_call_live(
         )
         if inspect.isawaitable(altered_function_response):
           altered_function_response = await altered_function_response
-        if altered_function_response:
+        if altered_function_response is not None:
           break
 
     # Step 6: If alternative response exists from after_tool_callback, use it
@@ -814,7 +814,7 @@ async def _execute_single_function_call_live(
 
     if tool.is_long_running:
       # Allow async function to return None to not provide function response.
-      if not function_response:
+      if function_response is None:
         return None
 
     # Note: State deltas are not applied here - they are collected in

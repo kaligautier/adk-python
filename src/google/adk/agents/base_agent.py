@@ -451,7 +451,7 @@ class BaseAgent(BaseModel):
     # If no overrides are provided from the plugins, further run the canonical
     # callbacks.
     if (
-        not before_agent_callback_content
+        before_agent_callback_content is None
         and self.canonical_before_agent_callbacks
     ):
       for callback in self.canonical_before_agent_callbacks:
@@ -460,12 +460,12 @@ class BaseAgent(BaseModel):
         )
         if inspect.isawaitable(before_agent_callback_content):
           before_agent_callback_content = await before_agent_callback_content
-        if before_agent_callback_content:
+        if before_agent_callback_content is not None:
           break
 
     # Process the override content if exists, and further process the state
     # change if exists.
-    if before_agent_callback_content:
+    if before_agent_callback_content is not None:
       ret_event = Event(
           invocation_id=ctx.invocation_id,
           author=self.name,
@@ -511,7 +511,7 @@ class BaseAgent(BaseModel):
     # If no overrides are provided from the plugins, further run the canonical
     # callbacks.
     if (
-        not after_agent_callback_content
+        after_agent_callback_content is None
         and self.canonical_after_agent_callbacks
     ):
       for callback in self.canonical_after_agent_callbacks:
@@ -520,12 +520,12 @@ class BaseAgent(BaseModel):
         )
         if inspect.isawaitable(after_agent_callback_content):
           after_agent_callback_content = await after_agent_callback_content
-        if after_agent_callback_content:
+        if after_agent_callback_content is not None:
           break
 
     # Process the override content if exists, and further process the state
     # change if exists.
-    if after_agent_callback_content:
+    if after_agent_callback_content is not None:
       ret_event = Event(
           invocation_id=invocation_context.invocation_id,
           author=self.name,
